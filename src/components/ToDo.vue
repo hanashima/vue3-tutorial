@@ -1,36 +1,10 @@
 <template>
 
     <label v-for="label in options">
-    <input type="radio"
-        v-model="current"
-        v-bind:value="label.value">{{ label.label }}
+        <el-radio v-model="current" v-bind:label="label.value">{{ label.label }}</el-radio>
+
     </label>
 
-    <table class="todo_tab">
-    <!-- テーブルヘッダー -->
-        <thead>
-            <tr>
-                <th class="id">ID</th>
-                <th class="comment">コメント</th>
-                <th class="state">状態</th>
-                <th class="button">-</th>
-            </tr>
-        </thead>
-        <tbody>
-        <!-- [1] ここに <tr> で ToDo の要素を1行づつ繰り返し表示したい -->
-            <tr v-for="item in computedTodos" v-bind:key="item.id">
-                <th>{{ item.id }}</th>
-                <td>{{ item.comment }}</td>
-                <td class="state">
-                    <button v-on:click="doChangeState(item)">
-                    {{ labels[item.state] }}</button>
-                </td>
-                <td class="button">
-                    <button v-on:click="doRemove(item)">削除</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
     <h2>新しい作業の追加</h2>
     <form class="add-form" v-on:submit.prevent="doAdd">
         <!-- コメント入力フォーム -->
@@ -38,6 +12,24 @@
         <!-- 追加ボタンのモック -->
         <button type="submit">追加</button>
     </form>
+    
+    <el-table :data="computedTodos" stripe style="width:80%; margin: auto;">
+        <el-table-column label="ID" prop="id" />
+        <el-table-column label="コメント" prop="comment" />
+        <el-table-column label="状態">
+            <template #default="scope">
+                <el-button type="primary" @click="doChangeState(computedTodos[scope.$index])">
+                    {{labels[computedTodos[scope.$index].state]}}
+                </el-button>
+            </template>
+        </el-table-column>
+        <el-table-column label="-">
+            <template #default="scope">
+                <el-button type="warning" v-on:click="doRemove(computedTodos[scope.$index])">削除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+
 </template>
 
 <script lang="ts">
@@ -83,11 +75,14 @@ export default defineComponent({
             let index = todos.indexOf(item)
             todos.splice(index, 1)
         };
+        const cons = function(d:any){
+            console.log(d);
+        }
         watch(todos, ()=>{ todoStorage.save(todos); });
 
         return { 
             todos, current, options, computedTodos, 
-            labels, comment, doAdd, doRemove, doChangeState 
+            labels, comment, doAdd, doRemove, doChangeState, cons
         };
     },
 });
