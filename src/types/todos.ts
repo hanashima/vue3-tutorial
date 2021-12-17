@@ -9,5 +9,12 @@ export class ATodo{
     state:number;
 }
 
+export class Form{
+    constructor(comment:string){
+        this.comment = comment
+    }
+    comment:string;
+}
+
 
 

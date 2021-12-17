@@ -1,8 +1,8 @@
 import { Ref } from "vue";
-import { ATodo } from "../types/todos";
+import { ATodo, Form } from "../types/todos";
 import { todoStorage } from "./local_strage";
-export function doAddTodo(todos:ATodo[],comment:Ref<HTMLInputElement|undefined>){
-    if (!comment.value || !comment.value.value.length){
+export function doAddTodo(todos:ATodo[],form:Form){
+    if (!form.comment || !form.comment.length){
         return
     }
     // { 新しいID, コメント, 作業状態 }
@@ -10,10 +10,10 @@ export function doAddTodo(todos:ATodo[],comment:Ref<HTMLInputElement|undefined>)
     // 作業状態「state」はデフォルト「作業中=0」で作成
     todos.push({
         id: todoStorage.uid++,
-        comment: comment.value.value,
+        comment: form.comment,
         state: 0
     });
     // フォーム要素を空にする
-    comment.value.value = '';
+    form.comment = '';
     //return { todos, comment }
 }

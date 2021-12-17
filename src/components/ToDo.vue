@@ -6,12 +6,16 @@
     </label>
 
     <h2>新しい作業の追加</h2>
-    <form class="add-form" v-on:submit.prevent="doAdd">
+    <el-form v-model="form" label-width="120px">
         <!-- コメント入力フォーム -->
-        コメント <input type="text" ref="comment">
+        <el-form-item>
+            コメント <el-input v-model="form.comment" placeholder="new task"/>
+        </el-form-item>
         <!-- 追加ボタンのモック -->
-        <button type="submit">追加</button>
-    </form>
+        <el-form-item>
+            <el-button type="danger" @click="doAdd">追加</el-button>
+        </el-form-item>
+    </el-form>
     
     <el-table :data="computedTodos" stripe style="width:80%; margin: auto;">
         <el-table-column label="ID" prop="id" />
@@ -33,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { ATodo } from "../types/todos";
+import { ATodo, Form } from "../types/todos";
 import { todoStorage } from '../libs/local_strage'
 import { computed, defineComponent, reactive, ref, watch } from "vue";
 import { doAddTodo } from "../libs/AddToDo";
@@ -46,7 +50,7 @@ export default defineComponent({
                 { value: 0,  label: '作業中' },
                 { value: 1,  label: '完了' }
             ],
-            current: -1
+            current: -1,
         }
     },
     setup(_, context){
@@ -59,6 +63,7 @@ export default defineComponent({
             { value: 1,  label: '完了' }
         ];
         const comment = ref<HTMLInputElement>();
+        const form:Form = reactive<Form>({comment:''});
 
         const computedTodos = computed(()=> todos.filter((el)=>{
             return current.value < 0 ? true : current.value === el.state
@@ -67,7 +72,7 @@ export default defineComponent({
             return Object.assign(a, {[b.value]:b.label})
         },{}));
 
-        const doAdd = function() { doAddTodo(todos, comment) };
+        const doAdd = function() { doAddTodo(todos, form) };
 
         const doChangeState = function(item:ATodo) { item.state = item.state ? 0 : 1 };
         // 削除の処理
@@ -75,14 +80,11 @@ export default defineComponent({
             let index = todos.indexOf(item)
             todos.splice(index, 1)
         };
-        const cons = function(d:any){
-            console.log(d);
-        }
         watch(todos, ()=>{ todoStorage.save(todos); });
 
         return { 
             todos, current, options, computedTodos, 
-            labels, comment, doAdd, doRemove, doChangeState, cons
+            labels, comment, doAdd, doRemove, doChangeState, form
         };
     },
 });

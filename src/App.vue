@@ -17,9 +17,14 @@ todoStorage.uid = todos.length;
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <!-- <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <ToDo></ToDo>
+  <ToDo></ToDo> -->
+  <router-link to="/"></router-link>
+  <router-link to="/todo"></router-link>
+  <a href="/">home</a>  /  <a href="/todo">todo</a>
+  <br>
+  <router-view></router-view>
 </template>
 
 <style>
