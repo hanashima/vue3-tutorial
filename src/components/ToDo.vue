@@ -43,16 +43,6 @@ import { computed, defineComponent, reactive, ref, watch } from "vue";
 import { doAddTodo } from "../libs/AddToDo";
 //defineProps<{todos:ATodo[]}>()
 export default defineComponent({
-    data(){
-        return{
-            options:[
-                { value: -1, label: 'すべて' },
-                { value: 0,  label: '作業中' },
-                { value: 1,  label: '完了' }
-            ],
-            current: -1,
-        }
-    },
     setup(_, context){
         let todos:ATodo[] = reactive<ATodo[]>([]);
         todos = todoStorage.fetch();
@@ -62,7 +52,6 @@ export default defineComponent({
             { value: 0,  label: '作業中' },
             { value: 1,  label: '完了' }
         ];
-        const comment = ref<HTMLInputElement>();
         const form:Form = reactive<Form>({comment:''});
 
         const computedTodos = computed(()=> todos.filter((el)=>{
@@ -84,7 +73,7 @@ export default defineComponent({
 
         return { 
             todos, current, options, computedTodos, 
-            labels, comment, doAdd, doRemove, doChangeState, form
+            labels, doAdd, doRemove, doChangeState, form
         };
     },
 });
